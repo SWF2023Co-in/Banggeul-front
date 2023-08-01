@@ -260,6 +260,14 @@ const Step2Bottom = () => {
   const [pet, setPet] = useState<string>("");
   const [isEnteredPet, setIsEnteredPet] = useState(false);
 
+  const parkings = ["없음", "있음"]; //주차
+  const [parking, setParking] = useState<string>("");
+  const [isEnteredParking, setIsEnteredparking] = useState(false);
+
+  const elevators = ["없음", "있음"]; //엘리베이터
+  const [elevator, setElevator] = useState<string>("");
+  const [isEnteredElevator, setIsEnteredElevator] = useState(false);
+
   const [movingInDate, setMovingInDate] = useState(""); //입주가능일
   const [isEnteredMovingInDates, setIsEnteredMovingInDate] = useState(false);
   const handleInputMovingInDate = (e: any) => {
@@ -305,6 +313,12 @@ const Step2Bottom = () => {
     if (movingInDate !== "") {
       setIsEnteredMovingInDate(true);
     }
+    if (parking !== "") {
+      setIsEnteredparking(true);
+    }
+    if (elevator !== "") {
+      setIsEnteredElevator(true);
+    }
   }, [
     deposit,
     rentalFee,
@@ -318,12 +332,14 @@ const Step2Bottom = () => {
     loan,
     pet,
     movingInDate,
+    parking,
+    elevator,
   ]);
 
   ////// 변수들(끝) ///////
 
   return (
-    <RegisterWrapper>
+    <RegisterWrapper isLong={option == "있음"}>
       <RegisterTitle>
         <GrayColorFont>Step 2 </GrayColorFont>방 정보 등록하기
       </RegisterTitle>
@@ -527,7 +543,7 @@ const Step2Bottom = () => {
                 책상
               </SmallButton>
             </FourSmallButtonDiv>
-            <FourSmallButtonDiv>
+            <FourSmallButtonDiv style={{ marginBottom: "5px" }}>
               <SmallButton
                 onClick={handleBookshelfButtonClick}
                 isClicked={bookshelf == yesString}
@@ -566,7 +582,7 @@ const Step2Bottom = () => {
           }}
         ></div>
 
-        <TwoInputDiv>
+        <TwoInputDiv style={{ marginTop: "20px" }}>
           <SmallInfoDiv>
             <SmallInfoTitle>전세대출</SmallInfoTitle>
             <Dropdown
@@ -593,20 +609,20 @@ const Step2Bottom = () => {
           <SmallInfoDiv>
             <SmallInfoTitle>주차</SmallInfoTitle>
             <Dropdown
-              options={loans}
-              selectedDropdownItem={loan}
-              setSelectedDropdownItem={setLoan}
-              isEnteredDropdownItem={isEnteredLoan}
+              options={parkings}
+              selectedDropdownItem={parking}
+              setSelectedDropdownItem={setParking}
+              isEnteredDropdownItem={isEnteredParking}
               isSmall={true}
             />
           </SmallInfoDiv>
           <SmallInfoDiv>
             <SmallInfoTitle>엘리베이터</SmallInfoTitle>
             <Dropdown
-              options={pets}
-              selectedDropdownItem={pet}
-              setSelectedDropdownItem={setPet}
-              isEnteredDropdownItem={isEnteredPet}
+              options={elevators}
+              selectedDropdownItem={elevator}
+              setSelectedDropdownItem={setElevator}
+              isEnteredDropdownItem={isEnteredElevator}
               isSmall={true}
             />
           </SmallInfoDiv>
@@ -626,7 +642,7 @@ const Step2Bottom = () => {
           />
         </TwoInputDiv>
       </InfosWrapper>
-      <GoPreviousNextImageWrapper>
+      <GoPreviousNextImageWrapper isLong={option == "있음"}>
         <GoPreviousNextImageDiv onClick={handleGoPreviousButtonClick}>
           <Image
             src="/img/register/newHome/previousButton.svg"
@@ -652,13 +668,17 @@ const Step2Bottom = () => {
   );
 };
 
-const RegisterWrapper = styled.div`
+interface IsLongProps {
+  isLong: boolean;
+}
+const RegisterWrapper = styled.div<IsLongProps>`
   position: absolute;
   z-index: 1;
 
   background-color: white;
 
-  height: 850px; //
+  height: ${(props) =>
+    props.isLong ? "965px" : "830px"}; //사진 등록 넣으면 바뀌어야 함
   width: 100%;
 
   top: 192px;
@@ -853,7 +873,7 @@ const SmallInput = ({
         ref={inputRef}
         type="number"
         required={true}
-        name="addressDetail"
+        name="value"
         onChange={handleInputValue}
         value={inputValue}
         min={0}
@@ -919,7 +939,7 @@ const Middleinput = styled.input<IsEnteredInterface>`
 `;
 
 ///GoPreviousNextButton
-const GoPreviousNextImageWrapper = styled.div`
+const GoPreviousNextImageWrapper = styled.div<IsLongProps>`
   position: absolute;
   width: 350px;
   height: 56px;
@@ -927,7 +947,8 @@ const GoPreviousNextImageWrapper = styled.div`
   display: flex;
   justify-content: space-between;
 
-  top: 980px;
+  top: ${(props) =>
+    props.isLong ? "1070px" : "940px"}; //사진 넣으면 바뀌어야 함
 
   margin-bottom: 20px;
   /* border: 1px solid purple;

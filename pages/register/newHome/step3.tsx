@@ -71,7 +71,7 @@ const Step3Bottom = () => {
               name="건축물대장"
             />
             <SquareBlock
-              isSatisfied={true}
+              isSatisfied={false}
               imgSrc="/img/register/newHome/step3/deungiGwonriBeforeSatisfied.svg"
               satisfiedImgSrc="/img/register/newHome/step3/deungiGwonriAfterSatisfied.svg"
               name="등기권리증"

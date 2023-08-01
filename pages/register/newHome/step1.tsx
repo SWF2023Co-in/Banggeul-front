@@ -48,8 +48,18 @@ const Step1 = () => {
     isEnteredEnroll_homeAddressDetail,
     setIsEnteredEnroll_homeAddressDetail,
   ] = useState(false);
+  const handleInputAddress = (e: any) => {
+    setEnroll_home({
+      ...enroll_home,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const [popup, setPopup] = useState(false); //주소찾기 창 나오는 여부
+  const handleComplete = (data: any) => {
+    // setPopup(!popup);
+    setPopup(true);
+  };
 
   useEffect(() => {
     //입력창에 입력되면 회색창이 사라지게 하기 위해
@@ -61,18 +71,6 @@ const Step1 = () => {
       setIsEnteredEnroll_homeAddressDetail(true);
     }
   }, [enroll_home.address, enroll_home.addressDetail]);
-
-  const handleInputAddress = (e: any) => {
-    setEnroll_home({
-      ...enroll_home,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const handleComplete = (data: any) => {
-    // setPopup(!popup);
-    setPopup(true);
-  };
 
   const handleGoNextButtonClick = () => {
     //다음 버튼 눌렀을 때 실행되는 함수
