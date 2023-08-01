@@ -1,5 +1,6 @@
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
+import { useState, useEffect } from "react";
 
 const RegisterComplete = () => {
   const router = useRouter();
@@ -9,13 +10,7 @@ const RegisterComplete = () => {
 
   return (
     <StepsContainer>
-      <img
-        src="/img/register/newHome/registerComplete/registerHomeComplete.svg"
-        alt="registerHomeComplete"
-        width={162}
-        height={154}
-        style={{ marginTop: "110px" }}
-      />
+      <RegisterHomeCompleteGif />
       <RegisterHomeCompleteMessage>
         내 집 등록하기가
         <br />
@@ -81,6 +76,7 @@ const StepsContainer = styled.div`
 `;
 
 const RegisterHomeCompleteMessage = styled.div`
+  position: absolute;
   text-align: center;
 
   font-size: 25px;
@@ -88,16 +84,16 @@ const RegisterHomeCompleteMessage = styled.div`
 
   color: black;
 
-  margin-top: 18px;
+  top: 275px;
 
   /* border: 1px solid red; */
 `;
 
 const RegisteredHomeInfoDiv = styled.div`
-  position: relative;
+  position: absolute;
   width: 284px;
 
-  margin-top: 42px;
+  top: 360px;
 
   /* border: 1px solid green;
   box-sizing: border-box; */
@@ -182,10 +178,11 @@ const SmallInfoValue = styled.div`
 `;
 
 const CompleteButton = styled.button`
+  position: absolute;
   width: 350px;
   height: 60px;
 
-  margin-top: 35px;
+  top: 590px;
 
   display: flex;
   justify-content: center;
@@ -201,3 +198,60 @@ const CompleteButton = styled.button`
 
   background-color: black;
 `;
+
+const RegisterHomeCompleteGif: React.FC = () => {
+  const [showGif, setShowGif] = useState(true);
+
+  useEffect(() => {
+    // 3초 후에 GIF를 멈추도록 처리
+    const timer = setTimeout(() => {
+      setShowGif(false);
+    }, 2200); // 3초
+
+    // 컴포넌트가 언마운트될 때 타이머를 정리
+    return () => clearTimeout(timer);
+  }, []);
+
+  return (
+    <>
+      <img
+        src="/img/register/newHome/registerComplete/registerHomeComplete.png"
+        alt="registerHomeCompletePng"
+        width={162}
+        height={154}
+        style={{ top: "110px", position: "absolute" }}
+      />
+      {showGif && (
+        <img
+          src="/img/register/newHome/registerComplete/registerHomeComplete.gif"
+          alt="registerHomeCompleteGif"
+          width={162}
+          height={154}
+          style={{ top: "110px", position: "absolute" }}
+        />
+      )}
+    </>
+  );
+};
+
+{
+  /* <>
+    {showGif ? (
+      <img
+        src="/img/register/newHome/registerComplete/registerHomeComplete.gif"
+        alt="registerHomeCompleteGif"
+        width={162}
+        height={154}
+        style={{ marginTop: "110px" }}
+      />
+    ) : (
+      <img
+        src="/img/register/newHome/registerComplete/registerHomeComplete.png"
+        alt="registerHomeCompletePng"
+        width={162}
+        height={154}
+        style={{ marginTop: "110px" }}
+      />
+    )}
+    </> */
+}

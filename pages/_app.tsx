@@ -2,13 +2,15 @@ import Head from "next/head";
 import { createGlobalStyle } from "styled-components";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
-import { atom, RecoilRoot } from "recoil";
+import { atom, RecoilRoot, useRecoilValue } from "recoil";
 
 import NavigationBar from "@/components/NavigaitonBar";
 
 import "../public/font/fonts.css"; // Import the custom fonts
 import "@/components/register/findAddress.css";
 import { useRouter } from "next/router";
+import { isOpenWalletPopupState } from "@/lib/states";
+import WalletPopup from "@/components/WalletPopup";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -37,7 +39,9 @@ export default function App({ Component, pageProps }: AppProps) {
     console.log(Kakao.isInitialized());
   }, []);
 
-  const showNavigationBar = noNavigationBarRouterPath.includes(router.pathname);
+  const NotShowNavigationBar = noNavigationBarRouterPath.includes(
+    router.pathname
+  );
 
   return (
     <>
@@ -48,10 +52,11 @@ export default function App({ Component, pageProps }: AppProps) {
           async
         />
       </Head>
+
+      <GlobalStyle />
       <RecoilRoot>
-        <GlobalStyle />
         <Component {...pageProps} />
-        {!showNavigationBar && <NavigationBar />}
+        {!NotShowNavigationBar && <NavigationBar />}
       </RecoilRoot>
     </>
   );

@@ -11,8 +11,8 @@ export const StepsContainer = styled.div`
 
   width: 100%;
 
-  border: 1px solid green;
-  box-sizing: border-box;
+  /* border: 1px solid green;
+  box-sizing: border-box; */
 `;
 
 export const RegisterTitle = styled.div`
