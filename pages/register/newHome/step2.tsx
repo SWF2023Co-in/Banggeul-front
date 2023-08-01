@@ -7,6 +7,8 @@ import { selectedRentalTypeState } from "@/lib/states";
 import { useRecoilState } from "recoil";
 import { useRouter } from "next/router";
 
+import UploadedImage from "@/components/register/UploadedImage";
+
 import {
   StepsContainer,
   RegisterTitle,
@@ -356,7 +358,9 @@ const Step2Bottom = () => {
       <InfosWrapper>
         <InfoDiv>
           <InfoTitle>사진등록</InfoTitle>
+          <UploadedImage />
         </InfoDiv>
+
         <TwoInputDiv>
           <SmallInfoDiv>
             <SmallInfoTitle>보증금</SmallInfoTitle>
@@ -677,7 +681,7 @@ const RegisterWrapper = styled.div<IsLongProps>`
   background-color: white;
 
   height: ${(props) =>
-    props.isLong ? "965px" : "830px"}; //사진 등록 넣으면 바뀌어야 함
+    props.isLong ? "1120px" : "985px"}; //사진 등록 넣으면 바뀌어야 함 //135차이
   width: 100%;
 
   top: 192px;
@@ -693,7 +697,7 @@ const AlertDiv = styled.div`
   position: absolute;
   z-index: 2;
 
-  background-color: black;
+  background-color: #212429;
   color: white;
 
   width: 350px;
@@ -728,6 +732,23 @@ const InfosWrapper = styled.div`
   /* border: 1px solid black;
   box-sizing: border-box; */
 `;
+
+const RegisterImageDiv = styled.div`
+  /* width: 300px; 너비를 원하는 크기로 조정 */
+  height: 150px; /* 높이를 원하는 크기로 조정 */
+  overflow-x: auto; /* 가로 스크롤을 표시하기 위해 overflow-x 속성 사용 */
+  white-space: nowrap; /* 내용이 한 줄에 표시되도록 설정 */
+
+  display: flex;
+`;
+
+// const Content = styled.div`
+//   display: inline-block; /* 내용을 가로로 나열하기 위해 인라인 블록 표시 */
+//   width: 150px; /* 각 요소의 너비를 원하는 크기로 조정 */
+//   height: 100%; /* 높이를 ScrollableDiv와 맞추기 위해 100%로 설정 */
+//   background-color: lightgray;
+//   margin-right: 10px; /* 각 요소 사이의 간격을 설정 */
+// `;
 
 const TwoInputDiv = styled.div`
   position: relative;
@@ -947,7 +968,9 @@ const GoPreviousNextImageWrapper = styled.div<IsLongProps>`
   justify-content: space-between;
 
   top: ${(props) =>
-    props.isLong ? "1070px" : "940px"}; //사진 넣으면 바뀌어야 함
+    props.isLong
+      ? "1225px"
+      : "1095px"}; //사진 넣으면 바뀌어야 함 // //130차이 남
 
   margin-bottom: 20px;
   /* border: 1px solid purple;

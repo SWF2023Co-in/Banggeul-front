@@ -3,6 +3,8 @@ import { createGlobalStyle } from "styled-components";
 import type { AppProps } from "next/app";
 import { useEffect } from "react";
 import { atom, RecoilRoot, useRecoilValue } from "recoil";
+import { WagmiConfig, createConfig, configureChains, mainnet } from "wagmi";
+import config from "@/components/ConnectWallet";
 
 import NavigationBar from "@/components/NavigaitonBar";
 
@@ -21,8 +23,10 @@ const GlobalStyle = createGlobalStyle`
 declare global {
   interface Window {
     Kakao: any;
+    Ethereum: any;
   }
   const Kakao: any;
+  const Ethereum: any;
 }
 
 const noNavigationBarRouterPath = [
@@ -55,8 +59,10 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <GlobalStyle />
       <RecoilRoot>
-        <Component {...pageProps} />
-        {!NotShowNavigationBar && <NavigationBar />}
+        <WagmiConfig config={config}>
+          <Component {...pageProps} />
+          {!NotShowNavigationBar && <NavigationBar />}
+        </WagmiConfig>
       </RecoilRoot>
     </>
   );

@@ -32,7 +32,7 @@ const Step4Bottom = () => {
   };
 
   const handleGoNextButtonClick = () => {
-    router.push("/register/newHome/registerCompleted");
+    router.push("/register/newHome/registerComplete");
     // //다음 버튼 눌렀을 때 실행되는 함수
     // if (
     //   //값을 모두 입력했는지 확인

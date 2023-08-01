@@ -8,7 +8,60 @@ import { useRouter } from "next/router";
 import { useRecoilState } from "recoil";
 import { isOpenWalletPopupState } from "@/lib/states";
 
+import Ethereum from "./Ethereum.png";
+import { ethers } from "ethers";
+
+import {
+  useAccount,
+  useConnect,
+  useDisconnect,
+  useEnsName,
+  WagmiConfig,
+  Connector,
+} from "wagmi";
+
 const WalletPopup = () => {
+  const provider = new ethers.providers.Web3Provider(window.ethereum);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [defaultAccount, setDefaultAccount] = useState<string | null>(null);
+  const [userBalance, setUserBalance] = useState<string | null>(null);
+  const connectwalletHandler = () => {
+    if (window.ethereum && window.ethereum.isMetaMask) {
+      provider
+        .send("eth_requestAccounts", [])
+        .then(async (accounts: string[]) => {
+          await accountChangedHandler(provider.getSigner(), accounts[0]);
+        });
+    } else {
+      setErrorMessage("Please Install MetaMask!!!");
+    }
+  };
+
+  // const accountChangedHandler = async (newAccount) => {
+  //   const address = await newAccount.getAddress();
+  //   setDefaultAccount(address);
+  //   const balance = await newAccount.getBalance();
+  //   setUserBalance(ethers.utils.formatEther(balance));
+  //   await getuserBalance(address);
+  // };
+  // const getuserBalance = async (address) => {
+  //   const balance = await provider.getBalance(address, "latest");
+  // };
+  const accountChangedHandler = async (
+    newAccount: ethers.Signer,
+    address: string
+  ) => {
+    setDefaultAccount(address);
+    const balance = await newAccount.getBalance();
+    setUserBalance(ethers.utils.formatEther(balance));
+    await getuserBalance(address);
+  };
+
+  const getuserBalance = async (address: string) => {
+    const balance = await provider.getBalance(address, "latest");
+    // Do something with balance...
+  };
+
   const [isAgreeWallet, setIsAgreeWallet] = useState(false);
   function handleAgreeButton() {
     setIsAgreeWallet(true);
@@ -16,6 +69,9 @@ const WalletPopup = () => {
   const [isOpenWalletPopup, setIsOpenWalletPopup] = useRecoilState(
     isOpenWalletPopupState
   );
+  const { connect, connectors, error, isLoading, pendingConnector } =
+    useConnect();
+
   return (
     <PopupDiv>
       <div
@@ -38,7 +94,14 @@ const WalletPopup = () => {
               alt="loginNWalletPopup"
             />
             <PopupDetail>불러올 지갑을 선택해주세요.</PopupDetail>
-            <WhiteButton style={{ marginBottom: "5px" }}>
+            {/* <WhiteButton
+              style={{ marginBottom: "5px" }}
+              key={connectors[0].id}
+              onClick={() => {
+                connectors[0];
+              }}
+            > */}
+            <WhiteButton onClick={connectwalletHandler}>
               <img
                 src="/img/src/popup/metamask.svg"
                 style={{ marginRight: "5px" }}
