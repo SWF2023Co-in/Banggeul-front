@@ -10,6 +10,9 @@ export const StepsContainer = styled.div`
   justify-content: center;
 
   width: 100%;
+
+  border: 1px solid green;
+  box-sizing: border-box;
 `;
 
 export const RegisterTitle = styled.div`

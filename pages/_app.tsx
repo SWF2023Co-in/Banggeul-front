@@ -28,6 +28,7 @@ const noNavigationBarRouterPath = [
   "/register/newHome/step2",
   "/register/newHome/step3",
   "/register/newHome/step4",
+  "/register/newHome/registerComplete",
 ];
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();

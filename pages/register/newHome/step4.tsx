@@ -10,6 +10,8 @@ import {
   IsEnteredInterface,
 } from "@/components/register/steps";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/router";
+import Image from "next/image";
 
 const Step4 = () => {
   const completedSteps = ["step1", "step2", "step3", "step4"];
@@ -24,6 +26,25 @@ const Step4 = () => {
 export default Step4;
 
 const Step4Bottom = () => {
+  const router = useRouter();
+  const handleGoPreviousButtonClick = () => {
+    router.push("/register/newHome/step1");
+  };
+
+  const handleGoNextButtonClick = () => {
+    router.push("/register/newHome/step3");
+    // //다음 버튼 눌렀을 때 실행되는 함수
+    // if (
+    //   //값을 모두 입력했는지 확인
+    //   rentalType !== "" &&
+    //   roomType !== "" &&
+    //   enroll_home.address !== "" &&
+    //   enroll_home.addressDetail !== ""
+    // ) {
+    //   router.push("/register/newHome/step2");
+    // }
+  };
+
   const [tagAmount, setTagAmout] = useState<number>(0);
   function handleAddTag() {
     setTagAmout(tagAmount + 1);
@@ -57,6 +78,18 @@ const Step4Bottom = () => {
   }, [message]);
   const messagePlaceholder = `방의 특징과 소개, 추가로 남기고 싶은 말을 자유롭게\n적어주세요!`;
 
+  const AddTagButton = () => {
+    return (
+      <img
+        src="/img/register/newHome/step4/addTag.svg"
+        alt="addTag"
+        width={29}
+        height={29}
+        onClick={handleAddTag}
+      />
+    );
+  };
+
   return (
     <RegisterWrapper>
       <RegisterTitle>
@@ -79,35 +112,81 @@ const Step4Bottom = () => {
         </InfoDiv>
         <InfoDiv>
           <InfoTitle>해시태그 추가하기</InfoTitle>
-
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            {tagAmount > 0 ? (
-              <>
-                {Array(tagAmount)
-                  .fill(null)
-                  .map((_, index) => (
-                    <SmallInput
-                      key={index}
-                      isEntered={true}
-                      handleInputValue={handleTag}
-                      inputValue={tag}
-                    />
-                  ))}
-              </>
-            ) : (
-              <></>
-            )}
-
-            <img
-              src="/img/register/newHome/step4/addTag.svg"
-              alt="addTag"
-              width={29}
-              height={29}
-              onClick={handleAddTag}
-            />
-          </div>
+          {tagAmount == 0 && <AddTagButton />}
+          {tagAmount == 1 && (
+            <SmallInfoDiv>
+              <SmallInput
+                isEntered={true}
+                handleInputValue={handleTag}
+                inputValue={tag}
+              />
+              <AddTagButton />
+            </SmallInfoDiv>
+          )}
+          {tagAmount == 2 && (
+            <SmallInfoDiv style={{ width: "270px" }}>
+              <SmallInput
+                isEntered={true}
+                handleInputValue={handleTag}
+                inputValue={tagList[0]}
+              />
+              <SmallInput
+                isEntered={true}
+                handleInputValue={handleTag}
+                inputValue={tag}
+              />
+              <AddTagButton />
+            </SmallInfoDiv>
+          )}
+          {tagAmount == 3 && (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <SmallInput
+                isEntered={true}
+                handleInputValue={handleTag}
+                inputValue={tagList[0]}
+              />
+              <SmallInput
+                isEntered={true}
+                handleInputValue={handleTag}
+                inputValue={tagList[1]}
+              />
+              <SmallInput
+                isEntered={true}
+                handleInputValue={handleTag}
+                inputValue={tag}
+              />
+            </div>
+          )}
         </InfoDiv>
       </InfosWrapper>
+      <GoPreviousNextImageWrapper>
+        <GoPreviousNextImageDiv onClick={handleGoPreviousButtonClick}>
+          <Image
+            src="/img/register/newHome/previousButton.svg"
+            alt="previousButton"
+            width={169}
+            height={56}
+          />
+          <GoPreviousNextMessage style={{ color: "black" }}>
+            이전
+          </GoPreviousNextMessage>
+        </GoPreviousNextImageDiv>
+        <GoPreviousNextImageDiv onClick={handleGoNextButtonClick}>
+          <Image
+            src="/img/register/newHome/nextButton.svg"
+            alt="nextButton"
+            width={169}
+            height={56}
+          />
+          <GoPreviousNextMessage>다음</GoPreviousNextMessage>
+        </GoPreviousNextImageDiv>
+      </GoPreviousNextImageWrapper>
     </RegisterWrapper>
   );
 };
@@ -118,7 +197,7 @@ const RegisterWrapper = styled.div`
 
   background-color: white;
 
-  height: 600px; //
+  height: 390px; //
 
   width: 100%;
 
@@ -142,8 +221,8 @@ const InfosWrapper = styled.div`
 
   top: 83px; //
 
-  border: 1px solid black;
-  box-sizing: border-box;
+  /* border: 1px solid black;
+  box-sizing: border-box; */
 `;
 
 const MessageInput = styled.textarea<IsEnteredInterface>`
@@ -266,3 +345,41 @@ const SmallInput = ({
     </SmallInputDiv>
   );
 };
+
+///GoPreviousNextButton
+const GoPreviousNextImageWrapper = styled.div`
+  position: absolute;
+  width: 350px;
+  height: 56px;
+
+  display: flex;
+  justify-content: space-between;
+
+  top: 410px;
+
+  margin-bottom: 20px;
+  /* border: 1px solid purple;
+  box-sizing: border-box; */
+`;
+
+const GoPreviousNextImageDiv = styled.div`
+  position: relative;
+`;
+
+const GoPreviousNextMessage = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  top: 0;
+  left: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
+  font-size: 19px;
+  font-weight: 400;
+  color: #bffa00;
+`;

@@ -52,7 +52,6 @@ const Step2Bottom = () => {
     //   router.push("/register/newHome/step2");
     // }
   };
-
   ////// 변수들 ///////
 
   const [rentalType, setRentalType] = useRecoilState(
