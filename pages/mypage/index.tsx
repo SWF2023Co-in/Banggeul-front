@@ -49,6 +49,7 @@ const Mypage = (): JSX.Element => {
       <WalletImage
         src="/img/mypage/walletBeforeConnect.svg"
         alt="walletBeforeConnect"
+        onClick={() => setIsOpenWalletPopup(true)}
       />
       <UserConvenienceWrapper>
         <UserConvenienceDiv>
@@ -91,7 +92,6 @@ const Mypage = (): JSX.Element => {
         </div>
       </InfoDiv>
 
-      {/* <KakaoLogin /> */}
       {isOpenLoginPopup && (
         <Container
           style={{
@@ -102,6 +102,18 @@ const Mypage = (): JSX.Element => {
           }}
         >
           <LoginPopup />
+        </Container>
+      )}
+      {isOpenWalletPopup && (
+        <Container
+          style={{
+            backgroundColor: "rgb(0,0,0,0.4)",
+            zIndex: "198",
+            position: "fixed",
+            bottom: "0px",
+          }}
+        >
+          <WalletPopup />
         </Container>
       )}
     </Container>

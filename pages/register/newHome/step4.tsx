@@ -28,11 +28,11 @@ export default Step4;
 const Step4Bottom = () => {
   const router = useRouter();
   const handleGoPreviousButtonClick = () => {
-    router.push("/register/newHome/step1");
+    router.push("/register/newHome/step3");
   };
 
   const handleGoNextButtonClick = () => {
-    router.push("/register/newHome/step3");
+    router.push("/register/newHome/registerCompleted");
     // //다음 버튼 눌렀을 때 실행되는 함수
     // if (
     //   //값을 모두 입력했는지 확인

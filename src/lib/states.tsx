@@ -37,12 +37,12 @@ export const selectedRentalTypeState = atom<string>({
   default: "",
 });
 
-export const isOpenWalletPopupState = atom<boolean>({
-  key: "IsOpenWalletPopupState",
+export const isOpenLoginPopupState = atom<boolean>({
+  key: "IsOpenLoginPopupState",
   default: false,
 });
 
-export const isOpenLoginPopupState = atom<boolean>({
-  key: "IsOpenLoginPopupState",
+export const isOpenWalletPopupState = atom<boolean>({
+  key: "IsOpenWalletPopupState",
   default: false,
 });

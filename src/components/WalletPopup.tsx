@@ -1,13 +1,21 @@
 import styled from "styled-components";
 import React from "react";
-import NextImage from "next/image";
+import Image from "next/image";
+
 import { useState, useEffect } from "react";
 import { useRouter } from "next/router";
 
 import { useRecoilState } from "recoil";
-import KakaoLogin from "./KakaoLogin";
+import { isOpenWalletPopupState } from "@/lib/states";
 
 const WalletPopup = () => {
+  const [isAgreeWallet, setIsAgreeWallet] = useState(false);
+  function handleAgreeButton() {
+    setIsAgreeWallet(true);
+  }
+  const [isOpenWalletPopup, setIsOpenWalletPopup] = useRecoilState(
+    isOpenWalletPopupState
+  );
   return (
     <PopupDiv>
       <div
@@ -18,18 +26,65 @@ const WalletPopup = () => {
           fontSize: "20px",
           color: "#797979",
         }}
+        onClick={() => setIsOpenWalletPopup(false)}
       >
         X
       </div>
       <PopupContent>
-        <PopupImage
-          src="/img/src/popup/loginNWalletPopup.svg"
-          alt="loginNWalletPopup"
-        />
-        <PopupDetail>로그인을 진행해주세요.</PopupDetail>
-        <KakaoLogin />
-        <OtherLoginButton>다른 방법으로 로그인</OtherLoginButton>
-        <LostAccountDiv>혹시, 계정을 잊어버리셨나요?</LostAccountDiv>
+        {isAgreeWallet ? (
+          <>
+            <PopupImage
+              src="/img/src/popup/loginNWalletPopup.svg"
+              alt="loginNWalletPopup"
+            />
+            <PopupDetail>불러올 지갑을 선택해주세요.</PopupDetail>
+            <WhiteButton style={{ marginBottom: "5px" }}>
+              <img
+                src="/img/src/popup/metamask.svg"
+                style={{ marginRight: "5px" }}
+              />
+              METAMASK
+            </WhiteButton>
+            <WhiteButton style={{ marginBottom: "5px" }}>
+              <img
+                src="/img/src/popup/rabbitWallet.svg"
+                style={{ marginRight: "5px" }}
+              />
+              RABBY WALLET
+            </WhiteButton>
+            <WhiteButton>
+              <img
+                src="/img/src/popup/xdefi.svg"
+                style={{ marginRight: "5px" }}
+              />
+              XDEFI
+            </WhiteButton>
+          </>
+        ) : (
+          <>
+            <PopupImage
+              src="/img/src/popup/agreeWalletPopup.svg"
+              alt="agreeWalletPopup"
+            />
+            <PopupDetail style={{ fontSize: "16px" }}>
+              암호화폐 지갑 정보를 불러오도록 허용하시겠습니까?
+            </PopupDetail>
+            <BlackImageWrapper style={{ marginBottom: "5px" }}>
+              <BlackImageDiv onClick={handleAgreeButton}>
+                <Image
+                  src="/img/src/popup/blackButton.png"
+                  alt="AgreeButton"
+                  width={300}
+                  height={45}
+                />
+                <BlackMessage>허용</BlackMessage>
+              </BlackImageDiv>
+            </BlackImageWrapper>
+            <WhiteButton onClick={() => setIsOpenWalletPopup(false)}>
+              허용 안함
+            </WhiteButton>
+          </>
+        )}
       </PopupContent>
     </PopupDiv>
   );
@@ -72,7 +127,7 @@ const PopupDetail = styled.div`
   margin-bottom: 25px;
 `;
 
-const OtherLoginButton = styled.div`
+const WhiteButton = styled.div`
   width: 300px;
   height: 45px;
 
@@ -80,30 +135,52 @@ const OtherLoginButton = styled.div`
   color: black;
 
   border: 1px solid #b3b3b3;
-  border-radius: 6px;
-
-  margin-bottom: 7px;
+  box-sizing: border-box;
+  border-radius: 10px;
 
   display: flex;
   text-align: center;
   align-items: center;
   justify-content: center;
 
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 500;
 `;
 
-const LostAccountDiv = styled.div`
-  height: 32px;
-  font-size: 12px;
-  font-weight: 400;
-
-  text-decoration: underline;
+//AgreeButton
+const BlackImageWrapper = styled.div`
+  width: 300px;
+  height: 45px;
 
   display: flex;
-  text-align: center;
+  justify-content: flex-end;
+
+  top: 655px;
+  /* margin-top: 30px; */
+
+  margin-bottom: 20px;
+  /* border: 1px solid purple;
+  box-sizing: border-box; */
+`;
+
+const BlackImageDiv = styled.div`
+  position: relative;
+`;
+
+const BlackMessage = styled.div`
+  position: absolute;
+  width: 100%;
+  height: 100%;
+
+  top: 0;
+  left: 0;
+
+  display: flex;
   align-items: center;
   justify-content: center;
+  text-align: center;
 
-  color: #797979;
+  font-size: 16px;
+  font-weight: 500;
+  color: #bffa00;
 `;
