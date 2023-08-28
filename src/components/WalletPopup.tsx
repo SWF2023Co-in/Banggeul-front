@@ -101,7 +101,10 @@ const WalletPopup = () => {
                 connectors[0];
               }}
             > */}
-            <WhiteButton onClick={connectwalletHandler}>
+            <WhiteButton
+              onClick={connectwalletHandler}
+              style={{ marginBottom: "5px" }}
+            >
               <img
                 src="/img/src/popup/metamask.svg"
                 style={{ marginRight: "5px" }}

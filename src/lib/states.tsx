@@ -32,11 +32,6 @@ export const homeAmountState = atom<number>({
   default: 3,
 });
 
-export const selectedRentalTypeState = atom<string>({
-  key: "SelectedRentalTypeState",
-  default: "",
-});
-
 export const isOpenLoginPopupState = atom<boolean>({
   key: "IsOpenLoginPopupState",
   default: false,

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import React, { useEffect, useState } from "react";
-import NextImage from "next/image";
 import {
   StepsContainer,
   RegisterTitle,
@@ -10,36 +9,33 @@ import {
   IsEnteredInterface,
   IsClickedProps,
 } from "@/components/register/steps";
-import { selectedRentalTypeState } from "@/lib/states";
-import { useRecoilState } from "recoil";
 
 import NewHomeTop from "@/components/register/NewHomeTop";
 import FindAddress from "@/components/register/FindAddress";
 import Image from "next/image";
 import { useRouter } from "next/router";
+import axios from "axios";
 
 const Step1 = () => {
   const completedSteps = ["step1"];
 
   const router = useRouter();
 
-  // const [rentalType, setRentalType] = useState("");
-  const [rentalType, setRentalType] = useRecoilState(
-    //전세, 월세
-    selectedRentalTypeState
-  );
+  const [rentalType, setRentalType] = useState(""); //전세, 월세
   const handleRentalTypeButtonClick = (rentalType: string) => {
     setRentalType(rentalType);
   };
 
-  const [roomType, setRoomType] = useState(""); //아파트, 오피스텔, 빌라, 원룸
-  const handleRoomTypeButtonClick = (roomType: string) => {
-    setRoomType(roomType);
+  const [homeType, setHomeType] = useState(""); //아파트, 오피스텔, 빌라, 원룸
+  const handleHomeTypeButtonClick = (homeType: string) => {
+    setHomeType(homeType);
   };
 
   const [enroll_home, setEnroll_home] = useState({
-    address: "",
-    addressDetail: "",
+    address: "", //도로명주소
+    lotNumberAddress: "", //지번주소
+    bcode: "", //	법정동/법정리 코드
+    addressDetail: "", //상세주소
   });
   const [isEnteredEnroll_homeAddress, setIsEnteredEnroll_homeAddress] = //주소
     useState(false);
@@ -48,6 +44,7 @@ const Step1 = () => {
     isEnteredEnroll_homeAddressDetail,
     setIsEnteredEnroll_homeAddressDetail,
   ] = useState(false);
+
   const handleInputAddress = (e: any) => {
     setEnroll_home({
       ...enroll_home,
@@ -72,15 +69,29 @@ const Step1 = () => {
     }
   }, [enroll_home.address, enroll_home.addressDetail]);
 
-  const handleGoNextButtonClick = () => {
+  const handleGoNextButtonClick = async () => {
     //다음 버튼 눌렀을 때 실행되는 함수
     if (
       //값을 모두 입력했는지 확인
       rentalType !== "" &&
-      roomType !== "" &&
+      homeType !== "" &&
       enroll_home.address !== "" &&
       enroll_home.addressDetail !== ""
     ) {
+      localStorage.setItem("rentalType", rentalType);
+      localStorage.setItem("homeType", homeType);
+      localStorage.setItem("roadNameAddress", enroll_home.address);
+      localStorage.setItem("lotNumberAddress", enroll_home.lotNumberAddress);
+      localStorage.setItem("bcode", enroll_home.bcode);
+      localStorage.setItem("detailedAddress", enroll_home.addressDetail);
+      try {
+        const data = await axios.post("https://banggeul.store/properties", {
+          rentalType: "",
+          homeType: "",
+        });
+      } catch {
+        // 오류 발생시 실행
+      }
       router.push("/register/newHome/step2");
     }
   };
@@ -100,8 +111,8 @@ const Step1 = () => {
         handleComplete={handleComplete}
         rentalType={rentalType}
         handleRentalTypeButtonClick={handleRentalTypeButtonClick}
-        roomType={roomType}
-        handleRoomTypeButtonClick={handleRoomTypeButtonClick}
+        homeType={homeType}
+        handleHomeTypeButtonClick={handleHomeTypeButtonClick}
         isEnteredEnroll_home={isEnteredEnroll_homeAddress}
         isEnteredEnroll_homeAddressDetail={isEnteredEnroll_homeAddressDetail}
         popup={popup}
@@ -119,8 +130,8 @@ interface Step1BottomProps {
   handleComplete: any;
   rentalType: string;
   handleRentalTypeButtonClick: any;
-  roomType: string;
-  handleRoomTypeButtonClick: any;
+  homeType: string;
+  handleHomeTypeButtonClick: any;
   isEnteredEnroll_home: boolean;
   isEnteredEnroll_homeAddressDetail: boolean;
   popup: boolean;
@@ -133,8 +144,8 @@ const Step1Bottom = ({
   handleComplete,
   rentalType,
   handleRentalTypeButtonClick,
-  roomType,
-  handleRoomTypeButtonClick,
+  homeType: homeType,
+  handleHomeTypeButtonClick: handleHomeTypeButtonClick,
   isEnteredEnroll_home,
   isEnteredEnroll_homeAddressDetail,
   popup,
@@ -171,12 +182,12 @@ const Step1Bottom = ({
           <InfoTitle>주거 형태</InfoTitle>
           <TwoButtonDiv style={{ marginBottom: "12px" }}>
             <LongButton
-              isClicked={"flat" == roomType}
+              isClicked={"flat" == homeType}
               onClick={() => {
-                handleRoomTypeButtonClick("flat");
+                handleHomeTypeButtonClick("flat");
               }}
             >
-              {"flat" === roomType ? (
+              {"flat" === homeType ? (
                 <img
                   src="/img/register/newHome/step1/smallFlatAfterClicked.svg"
                   style={{ marginRight: "10px" }}
@@ -190,12 +201,12 @@ const Step1Bottom = ({
               아파트
             </LongButton>
             <LongButton
-              isClicked={"officetel" == roomType}
+              isClicked={"officetel" == homeType}
               onClick={() => {
-                handleRoomTypeButtonClick("officetel");
+                handleHomeTypeButtonClick("officetel");
               }}
             >
-              {"officetel" === roomType ? (
+              {"officetel" === homeType ? (
                 <img
                   src="/img/register/newHome/step1/smallOfficetelAfterClicked.svg"
                   style={{ marginRight: "10px" }}
@@ -211,12 +222,12 @@ const Step1Bottom = ({
           </TwoButtonDiv>
           <TwoButtonDiv>
             <LongButton
-              isClicked={"villa" == roomType}
+              isClicked={"villa" == homeType}
               onClick={() => {
-                handleRoomTypeButtonClick("villa");
+                handleHomeTypeButtonClick("villa");
               }}
             >
-              {"villa" === roomType ? (
+              {"villa" === homeType ? (
                 <img
                   src="/img/register/newHome/step1/smallVillaAfterClicked.svg"
                   style={{ marginRight: "10px" }}
@@ -230,12 +241,12 @@ const Step1Bottom = ({
               빌라
             </LongButton>
             <LongButton
-              isClicked={"oneRoom" == roomType}
+              isClicked={"oneRoom" == homeType}
               onClick={() => {
-                handleRoomTypeButtonClick("oneRoom");
+                handleHomeTypeButtonClick("oneRoom");
               }}
             >
-              {"oneRoom" === roomType ? (
+              {"oneRoom" === homeType ? (
                 <img
                   src="/img/register/newHome/step1/smallOneRoomAfterClicked.svg"
                   style={{ marginRight: "10px" }}

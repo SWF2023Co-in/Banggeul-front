@@ -228,32 +228,7 @@ const InfoDiv = styled.div`
 
   display: flex;
   flex-direction: column; /* 자식 요소들을 세로 방향으로 배치 */
-
-  /* border: 1px solid green;
-  box-sizing: border-box; */
 `;
-
-// const Mypage = (): JSX.Element => {
-//   return (
-//     <img
-//       src="/img/mypage/kakao_login_medium_narrow.png"
-//       onClick={handleKakaoLoginImg}
-//     />
-//   );
-
-//   function handleKakaoLoginImg() {
-//     Kakao.Auth.authorize({
-//       redirectUri:
-//         "http://localhost:3000/oauth/callback/kakao" /* redirect되는 URL */,
-//     });
-
-//   }
-// }
-// `https://banggeul.store/login/kakao?code=${code}`
-
-{
-  /* <KakaoLogin /> */
-}
 
 interface SquareBlockProps {
   isSatisfied: boolean;

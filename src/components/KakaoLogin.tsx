@@ -7,9 +7,6 @@ declare global {
 }
 
 const KakaoLogin = () => {
-  //   const CLIENT_ID = `${process.env.REACT_APP_REST_API_KEY}`;
-  //   const REDIRECT_URI = `${process.env.REACT_APP_REDIRECT_URL}`;
-
   return (
     <img
       alt="카카오 로그인"

@@ -6,6 +6,8 @@ const FindAddress = (props: any) => {
   const complete = (data: any) => {
     let fullAddress = data.address;
     let extraAddress = "";
+    let autoJibunAddress = data.autoJibunAddress;
+    let bcode = data.bcode;
 
     if (data.addressType === "R") {
       if (data.bname !== "") {
@@ -24,6 +26,8 @@ const FindAddress = (props: any) => {
     props.setcompany({
       ...props.company,
       address: fullAddress,
+      lotNumberAddress: autoJibunAddress,
+      bcode: bcode,
     });
   };
 
