@@ -12,6 +12,10 @@ import {
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { useRecoilState } from "recoil";
+import { registerHomeWholeInfoState } from "@/lib/states";
+import { registerHomeUpLoadFileState } from "@/lib/states";
+import { useFeeData } from "wagmi";
 
 const Step4 = () => {
   const completedSteps = ["step1", "step2", "step3", "step4"];
@@ -27,38 +31,49 @@ export default Step4;
 
 const Step4Bottom = () => {
   const router = useRouter();
+
+  const [registerHomeWholeInfo, setRegisterHomeWholeInfo] = useRecoilState(
+    registerHomeWholeInfoState
+  );
+  const [registerHomeWholeFile, setRegisterHomeWholeFile] = useRecoilState(
+    registerHomeUpLoadFileState
+  );
+
   const handleGoPreviousButtonClick = () => {
     router.push("/register/newHome/step3");
   };
 
   const handleGoNextButtonClick = () => {
-    router.push("/register/newHome/registerComplete");
-    // //다음 버튼 눌렀을 때 실행되는 함수
-    // if (
-    //   //값을 모두 입력했는지 확인
-    //   rentalType !== "" &&
-    //   roomType !== "" &&
-    //   enroll_home.address !== "" &&
-    //   enroll_home.addressDetail !== ""
-    // ) {
-    //   router.push("/register/newHome/step2");
-    // }
+    //다음 버튼 눌렀을 때 실행되는 함수
+    if (
+      //값을 모두 입력했는지 확인
+      message !== undefined &&
+      tagList.length > 0
+    ) {
+      // console.log(message);
+      // console.log(tagList);
+      updateRegisterHomeWholeInfo();
+      router.push("/register/newHome/registerComplete");
+      console.log(registerHomeWholeInfo);
+      console.log(registerHomeWholeFile);
+    }
   };
 
   const [tagAmount, setTagAmout] = useState<number>(0);
   function handleAddTag() {
     setTagAmout(tagAmount + 1);
+    console.log("태그 눌림");
     if (tag != undefined) {
-      setTagList([...tagList, tag]);
+      setTagList((prevTagList) => [...prevTagList, tag]);
+      console.log(tagList);
     }
-    console.log(tagList);
     setTag(undefined);
   }
 
   const [message, setMessage] = useState<string | undefined>(undefined); //메시지
   const handleMessage = (e: any) => {
-    setMessage(e.target.value);
-    console.log(message);
+    const newValue = e.target.value;
+    setMessage(newValue);
   };
   const [isEnteredMessage, setIsEnteredMessage] = useState(false);
 
@@ -66,7 +81,9 @@ const Step4Bottom = () => {
 
   const [tag, setTag] = useState<string | undefined>(undefined); //태그
   const handleTag = (e: any) => {
-    setTag(e.target.value);
+    const newValue = e.target.value;
+    setTag(newValue);
+    console.log(tag);
   };
   // const [isEnteredTag, setIsEnteredTag] = useState(false);
 
@@ -88,6 +105,14 @@ const Step4Bottom = () => {
         onClick={handleAddTag}
       />
     );
+  };
+
+  const updateRegisterHomeWholeInfo = () => {
+    setRegisterHomeWholeInfo({
+      ...registerHomeWholeInfo,
+      message: "여기도 고쳐야 합니다.",
+      tags: ["여기는", "고쳐야", "합니다"],
+    });
   };
 
   return (

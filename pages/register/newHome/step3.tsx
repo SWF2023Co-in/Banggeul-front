@@ -2,6 +2,9 @@ import NewHomeTop from "@/components/register/NewHomeTop";
 import styled from "styled-components";
 import { useRouter } from "next/router";
 import Image from "next/image";
+import { registerHomeWholeInfoState } from "@/lib/states";
+import { useRecoilState } from "recoil";
+import { yesString, noString } from "@/components/register/steps";
 
 import {
   StepsContainer,
@@ -29,19 +32,22 @@ const Step3Bottom = () => {
   const handleGoPreviousButtonClick = () => {
     router.push("/register/newHome/step2");
   };
+  const [registerHomeWholeInfo, setRegisterHomeWholeInfo] = useRecoilState(
+    registerHomeWholeInfoState
+  );
+
+  const updateRegisterHomeWholeInfo = () => {
+    setRegisterHomeWholeInfo({
+      ...registerHomeWholeInfo,
+      registryYn: yesString,
+      buildingLedgerYn: yesString,
+    });
+  };
 
   const handleGoNextButtonClick = () => {
+    updateRegisterHomeWholeInfo();
+    console.log(registerHomeWholeInfo);
     router.push("/register/newHome/step4");
-    // //다음 버튼 눌렀을 때 실행되는 함수
-    // if (
-    //   //값을 모두 입력했는지 확인
-    //   rentalType !== "" &&
-    //   roomType !== "" &&
-    //   enroll_home.address !== "" &&
-    //   enroll_home.addressDetail !== ""
-    // ) {
-    //   router.push("/register/newHome/step2");
-    // }
   };
   return (
     <RegisterWrapper>

@@ -1,11 +1,80 @@
 import { styled } from "styled-components";
 import { useRouter } from "next/router";
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { useRecoilValue } from "recoil";
+import {
+  registerHomeUpLoadFileState,
+  registerHomeWholeInfoState,
+} from "@/lib/states";
 
 const RegisterComplete = () => {
   const router = useRouter();
   const handleGoCompleteButtonClick = () => {
     router.replace("/");
+  };
+  const uploadFile: object | null | string = useRecoilValue(
+    registerHomeUpLoadFileState
+  );
+  const registerHomeWholeInfo = useRecoilValue(registerHomeWholeInfoState);
+  console.log(uploadFile);
+
+  useEffect(() => {
+    handleUpload();
+  }, []); // 페이지 로드 시 한 번만 업로드하도록 설정
+
+  const handleUpload = async () => {
+    if (uploadFile === null) {
+      console.error("uploadFile is null");
+      return;
+    }
+
+    const jsonRegisterHomeWholeInfo = JSON.stringify(registerHomeWholeInfo);
+    const blobRegisterHomeWholeInfo = new Blob([jsonRegisterHomeWholeInfo], {
+      type: "application/json",
+    });
+
+    const formData = new FormData();
+    // formData.append("files", uploadFile);
+    if (uploadFile instanceof File) {
+      formData.append("files", uploadFile);
+    } else if (uploadFile instanceof Blob) {
+      formData.append("files", uploadFile);
+    } else {
+      console.error("Unsupported type for uploadFile");
+      return;
+    }
+    formData.append("request", blobRegisterHomeWholeInfo);
+    console.log(formData.get("files"));
+    console.log(formData.get("request"));
+
+    // const params = new URL(document.location.toString()).searchParams;
+    // const code = params.get("code");
+
+    // const response = await axios.get(
+    //   `https://banggeul.store/login/kakao?code=${code}`
+    // );
+
+    // const access_token = response.data.response["accessToken"];
+    // console.log(access_token);
+    const access_token =
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJLQUtBTzI5MzYxMTk1MjciLCJyb2xlIjoiVVNFUiIsImV4cCI6MTY5MzUzMjE3MH0.2zF-VJ5nlrQP9uZyjCZ5-Y2rwfn0HiYMIWb47TrkMCc";
+    axios.defaults.headers.common["Authorization"] = `Bearer ${access_token}`;
+
+    try {
+      const uploadResponse = await axios({
+        method: "post",
+        url: "https://banggeul.store/properties",
+        data: formData,
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+
+      console.log(uploadResponse); // 업로드 응답 확인
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

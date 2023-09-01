@@ -1,9 +1,38 @@
+import { type } from "os";
 import { useState } from "react";
 import { useRef } from "react";
 import { styled } from "styled-components";
+import { useRecoilState } from "recoil";
+import {
+  registerHomeUpLoadFileState,
+  registerHomeWholeInfoState,
+} from "@/lib/states";
 
 const UploadedImage = () => {
   const inputRef = useRef<HTMLInputElement>(null);
+  const [registerHomeUpLoadFile, setRegisterHomeUpLoadFile] = useRecoilState(
+    registerHomeUpLoadFileState
+  );
+  const updateRegisterHomeUpLoadFile = (file: object) => {
+    setRegisterHomeUpLoadFile(file);
+  };
+
+  const [registerHomeWholeInfo, setRegisterHomeWholeInfo] = useRecoilState(
+    registerHomeWholeInfoState
+  );
+
+  const updateRegisterHomeWholeInfo = (fileName: string, index: number) => {
+    setRegisterHomeWholeInfo({
+      ...registerHomeWholeInfo,
+      images: [
+        ...registerHomeWholeInfo.images,
+        {
+          fileName: fileName,
+          index: index,
+        },
+      ],
+    });
+  };
 
   const handleClick = () => {
     // input 엘리먼트가 클릭되었을 때 input 버튼을 클릭하기 위해 click() 메서드를 사용
@@ -22,25 +51,11 @@ const UploadedImage = () => {
       reader.onload = () => {
         setImageSrc(reader.result);
       };
+      updateRegisterHomeUpLoadFile(file);
+      updateRegisterHomeWholeInfo(file.name, 1);
     }
   };
 
-  //   return (
-  //     <>
-  //       <StyledUploadImageButton onClick={handleClick}>
-  //         최대 15장의 사진을 <br />
-  //         등록할 수 있어요.
-  //         <input
-  //           ref={inputRef}
-  //           accept="image/*"
-  //           type="file"
-  //           onChange={onUpload}
-  //           style={{ display: "none" }} // input 엘리먼트를 감추기 위해 display: none 스타일 적용
-  //         />
-  //         <HomeInfoImage imageUrl={imageSrc} />
-  //       </StyledUploadImageButton>
-  //     </>
-  //   );
   return (
     <>
       {imageSrc ? (

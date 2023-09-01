@@ -90,7 +90,6 @@ export const HomePage = (): JSX.Element => {
                 handleHomeTypeButtonClick("flat");
                 const url = `/flat/recent`;
                 router.push(url, undefined, { shallow: true });
-                console.log("hi");
               }}
               isClicked={"flat" == selectedHomeType}
             />

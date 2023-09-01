@@ -40,7 +40,7 @@ export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
   useEffect(() => {
     window.Kakao.init("4a406fbd2d60f59ee481e8b106cda45c");
-    console.log(Kakao.isInitialized());
+    // console.log(Kakao.isInitialized());
   }, []);
 
   const NotShowNavigationBar = noNavigationBarRouterPath.includes(

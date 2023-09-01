@@ -22,6 +22,7 @@ const FindAddress = (props: any) => {
     console.log(data);
     console.log(fullAddress);
     console.log(data.zonecode);
+    console.log(autoJibunAddress);
 
     props.setcompany({
       ...props.company,

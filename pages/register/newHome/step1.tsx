@@ -12,14 +12,22 @@ import {
 
 import NewHomeTop from "@/components/register/NewHomeTop";
 import FindAddress from "@/components/register/FindAddress";
+import {
+  registerHomeWholeInfoState,
+  registerHomeWholeInfoInitialState,
+} from "@/lib/states";
 import Image from "next/image";
 import { useRouter } from "next/router";
-import axios from "axios";
+import { useRecoilState } from "recoil";
 
 const Step1 = () => {
   const completedSteps = ["step1"];
 
   const router = useRouter();
+
+  const [registerHomeWholeInfo, setRegisterHomeWholeInfo] = useRecoilState(
+    registerHomeWholeInfoState
+  );
 
   const [rentalType, setRentalType] = useState(""); //전세, 월세
   const handleRentalTypeButtonClick = (rentalType: string) => {
@@ -69,6 +77,22 @@ const Step1 = () => {
     }
   }, [enroll_home.address, enroll_home.addressDetail]);
 
+  useEffect(() => {
+    setRegisterHomeWholeInfo(registerHomeWholeInfoInitialState);
+  }, []);
+
+  const updateRegisterHomeWholeInfo = () => {
+    setRegisterHomeWholeInfo({
+      ...registerHomeWholeInfo,
+      rentalType: rentalType,
+      homeType: homeType,
+      roadNameAddress: enroll_home.address,
+      lotNumberAddress: enroll_home.lotNumberAddress,
+      bcode: enroll_home.bcode,
+      detailedAddress: enroll_home.addressDetail,
+    });
+  };
+
   const handleGoNextButtonClick = async () => {
     //다음 버튼 눌렀을 때 실행되는 함수
     if (
@@ -78,20 +102,7 @@ const Step1 = () => {
       enroll_home.address !== "" &&
       enroll_home.addressDetail !== ""
     ) {
-      localStorage.setItem("rentalType", rentalType);
-      localStorage.setItem("homeType", homeType);
-      localStorage.setItem("roadNameAddress", enroll_home.address);
-      localStorage.setItem("lotNumberAddress", enroll_home.lotNumberAddress);
-      localStorage.setItem("bcode", enroll_home.bcode);
-      localStorage.setItem("detailedAddress", enroll_home.addressDetail);
-      try {
-        const data = await axios.post("https://banggeul.store/properties", {
-          rentalType: "",
-          homeType: "",
-        });
-      } catch {
-        // 오류 발생시 실행
-      }
+      updateRegisterHomeWholeInfo();
       router.push("/register/newHome/step2");
     }
   };

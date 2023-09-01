@@ -1,7 +1,9 @@
 import React, { useEffect } from "react";
 import axios from "axios";
+import { useRouter } from "next/router";
 
 const KakaoCallback = () => {
+  const router = useRouter();
   useEffect(() => {
     const fetchData = async () => {
       const params = new URL(document.location.toString()).searchParams;
@@ -29,9 +31,10 @@ const KakaoCallback = () => {
     };
 
     fetchData();
+    router.push("/");
   }, []);
 
-  return <div>로그인 성공!</div>;
+  return <div>로그인 처리중입니다.</div>;
 };
 
 export default KakaoCallback;

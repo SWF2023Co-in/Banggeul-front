@@ -3,12 +3,11 @@ import styled from "styled-components";
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 
-import { selectedRentalTypeState } from "@/lib/states";
 import { useRecoilState } from "recoil";
 import { useRouter } from "next/router";
 
 import UploadedImage from "@/components/register/UploadedImage";
-
+import { registerHomeWholeInfoState } from "@/lib/states";
 import {
   StepsContainer,
   RegisterTitle,
@@ -41,52 +40,121 @@ const Step2Bottom = () => {
     router.push("/register/newHome/step1");
   };
 
+  const [registerHomeWholeInfo, setRegisterHomeWholeInfo] = useRecoilState(
+    registerHomeWholeInfoState
+  );
+
+  function convertKoToEnYesNo(ko: string) {
+    if (ko == "없음") {
+      return noString;
+    } else if (ko == "있음") {
+      return yesString;
+    }
+    if (ko == "오픈형") {
+      return "open";
+    } else if (ko == "분리형") {
+      return "seperated";
+    }
+    if (ko == "동향") {
+      return "east";
+    } else if (ko == "서향") {
+      return "west";
+    } else if (ko == "남향") {
+      return "south";
+    } else if (ko == "북향") {
+      return "north";
+    }
+    return "";
+  }
+
+  const updateRegisterHomeWholeInfo = () => {
+    setRegisterHomeWholeInfo({
+      ...registerHomeWholeInfo,
+      deposit: deposit,
+      rentalFee: rentalFee,
+      structure: convertKoToEnYesNo(structure),
+      direction: convertKoToEnYesNo(direction),
+      maintenanceFee: maintenanceFee,
+      electricity: electricity,
+      gas: gas,
+      water: water,
+      internet: internet,
+      area: area,
+      buildingFloor: buildingFloor,
+      roomFloor: roomFloor,
+      airConditioner: airConditioner,
+      fridge: fridge,
+      laundry: laundry,
+      induction: induction,
+      gasStove: gasStove,
+      microwave: microwave,
+      desk: desk,
+      bookshelf: bookshelf,
+      bed: bed,
+      closet: closet,
+      sink: sink,
+      loan: convertKoToEnYesNo(loan),
+      pet: convertKoToEnYesNo(pet),
+      parking: convertKoToEnYesNo(parking),
+      elevator: convertKoToEnYesNo(elevator),
+      movingInDate: convertKoToEnYesNo(movingInDate),
+    });
+  };
+
   const handleGoNextButtonClick = () => {
-    router.push("/register/newHome/step3");
-    // //다음 버튼 눌렀을 때 실행되는 함수
-    // if (
-    //   //값을 모두 입력했는지 확인
-    //   rentalType !== "" &&
-    //   roomType !== "" &&
-    //   enroll_home.address !== "" &&
-    //   enroll_home.addressDetail !== ""
-    // ) {
-    //   router.push("/register/newHome/step2");
-    // }
+    //다음 버튼 눌렀을 때 실행되는 함수
+    if (registerHomeWholeInfo.rentalType == "monthly") {
+      if (rentalFee == null) {
+        return;
+      }
+    }
+    if (registerHomeWholeInfo.rentalType == "lumpsum") {
+      if (loan == "") {
+        return;
+      }
+    }
+    if (
+      deposit !== null &&
+      structure !== "" &&
+      direction !== "" &&
+      maintenanceFee !== null &&
+      area !== null &&
+      buildingFloor !== null &&
+      roomFloor !== null &&
+      pet !== "" &&
+      parking !== "" &&
+      elevator !== "" &&
+      movingInDate !== ""
+    ) {
+      updateRegisterHomeWholeInfo();
+      router.push("/register/newHome/step3");
+    }
   };
   ////// 변수들 ///////
 
-  const [rentalType, setRentalType] = useRecoilState(
-    //전월세에 따라 다른 화면 보여주기 위해
-    //전세, 월세
-    selectedRentalTypeState
-  );
-
-  const [deposit, setDeposit] = useState<number | undefined>(undefined); //보증금
+  const [deposit, setDeposit] = useState<number | null>(null); //보증금
   const handleDeposit = (e: any) => {
-    setDeposit(e.target.value);
+    setDeposit(Number(e.target.value));
   };
   const [isEnteredDeposit, setIsEnteredDeposit] = useState(false);
 
-  const [rentalFee, setRentalFee] = useState<number | undefined>(undefined); //월세
+  const [rentalFee, setRentalFee] = useState<number | null>(null); //월세
   const handleRentalFee = (e: any) => {
-    setRentalFee(e.target.value);
+    setRentalFee(Number(e.target.value));
   };
   const [isEnteredRentalFee, setIsEnteredRentalFee] = useState(false);
 
-  const structures = ["오픈형", "분리형"]; //방구조
-  const [structure, setStructure] = useState<string>("");
+  const structures = ["오픈형", "분리형"];
+  const [structure, setStructure] = useState<string>(""); //방구조
   const [isEnteredStructure, setIsEnteredStructure] = useState(false);
 
-  const directions = ["동향", "서향", "남향", "북향"]; //방향
-  const [direction, setDirection] = useState<string>("");
+  const directions = ["동향", "서향", "남향", "북향"];
+  const [direction, setDirection] = useState<string>(""); //방향
   const [isEnteredDirection, setIsEnteredDirection] = useState(false);
 
-  const [maintenanceFee, setMaintenanceFee] = useState<number | undefined>( //관리비
-    undefined
-  );
+  const [maintenanceFee, setMaintenanceFee] = useState<number | null>(null); //관리비
   const handleMaintenanceFee = (e: any) => {
-    setMaintenanceFee(e.target.value);
+    setMaintenanceFee(Number(e.target.value));
   };
   const [isEnteredMaintenanceFee, setIsEnteredMaintenanceFee] = useState(false);
 
@@ -122,31 +190,28 @@ const Step2Bottom = () => {
     if (internet === yesString) {
       setInternet(noString);
     } else if (internet === noString) {
-      setInternet(yesString);
     }
   };
 
-  const [area, setArea] = useState<number | undefined>(undefined); //면적
+  const [area, setArea] = useState<number | null>(null); //면적
   const handleArea = (e: any) => {
-    setArea(e.target.value);
+    setArea(Number(e.target.value));
     const calculatedPyeong = parseFloat((e.target.value / 3.3).toFixed(1));
-    setPyeong(calculatedPyeong);
+    setPyeong(Number(calculatedPyeong));
   };
   const [isEnteredArea, setIsEnteredArea] = useState(false);
 
-  const [pyeong, setPyeong] = useState<number | undefined>(undefined); //평
+  const [pyeong, setPyeong] = useState<number | null>(null); //평
 
-  const [buildingFloor, setBuildingFloor] = useState<number | undefined>(
-    undefined
-  ); //건물 층
+  const [buildingFloor, setBuildingFloor] = useState<number | null>(null); //건물 층
   const handleBuildingFloor = (e: any) => {
-    setBuildingFloor(e.target.value);
+    setBuildingFloor(Number(e.target.value));
   };
   const [isEnteredBuildingFloor, setIsEnteredBuildingFloor] = useState(false);
 
-  const [roomFloor, setRoomFloor] = useState<number | undefined>(undefined); //해당 층
+  const [roomFloor, setRoomFloor] = useState<number | null>(null); //해당 층
   const handleRoomFloor = (e: any) => {
-    setRoomFloor(e.target.value);
+    setRoomFloor(Number(e.target.value));
   };
   const [isEnteredRoomFloor, setIsEnteredRoomFloor] = useState(false);
 
@@ -253,13 +318,13 @@ const Step2Bottom = () => {
     }
   };
 
-  const loans = ["없음", "있음"]; //전세대출
-  const [loan, setLoan] = useState<string>("");
-  const [isEnteredLoan, setIsEnteredLoan] = useState(false);
-
-  const pets = ["없음", "있음"]; //반려동물
-  const [pet, setPet] = useState<string>("");
+  const pets = ["없음", "있음"];
+  const [pet, setPet] = useState<string>(""); //반려동물
   const [isEnteredPet, setIsEnteredPet] = useState(false);
+
+  const loans = ["없음", "있음"];
+  const [loan, setLoan] = useState<string>(""); //전세대출
+  const [isEnteredLoan, setIsEnteredLoan] = useState(false);
 
   const parkings = ["없음", "있음"]; //주차
   const [parking, setParking] = useState<string>("");
@@ -273,15 +338,14 @@ const Step2Bottom = () => {
   const [isEnteredMovingInDates, setIsEnteredMovingInDate] = useState(false);
   const handleInputMovingInDate = (e: any) => {
     setMovingInDate(e.target.value);
-    console.log(movingInDate);
   };
 
   useEffect(() => {
     //입력창에 입력되면 회색창이 사라지게 하기 위해
-    if (deposit !== undefined) {
+    if (deposit !== null) {
       setIsEnteredDeposit(true);
     }
-    if (rentalFee !== undefined) {
+    if (rentalFee !== null) {
       setIsEnteredRentalFee(true);
     }
     if (structure !== "") {
@@ -290,16 +354,16 @@ const Step2Bottom = () => {
     if (direction !== "") {
       setIsEnteredDirection(true);
     }
-    if (maintenanceFee !== undefined) {
+    if (maintenanceFee !== null) {
       setIsEnteredMaintenanceFee(true);
     }
-    if (area !== undefined) {
+    if (area !== null) {
       setIsEnteredArea(true);
     }
-    if (buildingFloor !== undefined) {
+    if (buildingFloor !== null) {
       setIsEnteredBuildingFloor(true);
     }
-    if (roomFloor !== undefined) {
+    if (roomFloor !== null) {
       setIsEnteredRoomFloor(true);
     }
     if (option !== "없음") {
@@ -371,15 +435,19 @@ const Step2Bottom = () => {
               unit="만원"
             />
           </SmallInfoDiv>
-          <SmallInfoDiv>
-            <SmallInfoTitle style={{ marginLeft: "10px" }}>월세</SmallInfoTitle>
-            <SmallInput
-              isEntered={isEnteredRentalFee}
-              handleInputValue={handleRentalFee}
-              inputValue={rentalFee}
-              unit="만원"
-            />
-          </SmallInfoDiv>
+          {registerHomeWholeInfo.rentalType == "monthly" && (
+            <SmallInfoDiv>
+              <SmallInfoTitle style={{ marginLeft: "10px" }}>
+                월세
+              </SmallInfoTitle>
+              <SmallInput
+                isEntered={isEnteredRentalFee}
+                handleInputValue={handleRentalFee}
+                inputValue={rentalFee}
+                unit="만원"
+              />
+            </SmallInfoDiv>
+          )}
         </TwoInputDiv>
         <TwoInputDiv>
           <SmallInfoDiv>
@@ -587,16 +655,6 @@ const Step2Bottom = () => {
 
         <TwoInputDiv style={{ marginTop: "20px" }}>
           <SmallInfoDiv>
-            <SmallInfoTitle>전세대출</SmallInfoTitle>
-            <Dropdown
-              options={loans}
-              selectedDropdownItem={loan}
-              setSelectedDropdownItem={setLoan}
-              isEnteredDropdownItem={isEnteredLoan}
-              isSmall={true}
-            />
-          </SmallInfoDiv>
-          <SmallInfoDiv>
             <SmallInfoTitle>반려동물</SmallInfoTitle>
             <Dropdown
               options={pets}
@@ -606,6 +664,18 @@ const Step2Bottom = () => {
               isSmall={true}
             />
           </SmallInfoDiv>
+          {registerHomeWholeInfo.rentalType == "lumpsum" && (
+            <SmallInfoDiv>
+              <SmallInfoTitle>전세대출</SmallInfoTitle>
+              <Dropdown
+                options={loans}
+                selectedDropdownItem={loan}
+                setSelectedDropdownItem={setLoan}
+                isEnteredDropdownItem={isEnteredLoan}
+                isSmall={true}
+              />
+            </SmallInfoDiv>
+          )}
         </TwoInputDiv>
 
         <TwoInputDiv>
